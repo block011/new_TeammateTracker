@@ -2,7 +2,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
-from config import *
+import SensitiveConfig as sc
 
 #Parent database class -- established connection using firebase json
 class SuperDatabase:
@@ -18,7 +18,7 @@ class LeagueDatabase:
     instance = None
     class __LeagueDatabase(SuperDatabase):
         def __init__(self, baseCollection):
-            SuperDatabase.__init__(self, LEAGUE_DATABASE_JSON)
+            SuperDatabase.__init__(self, sc.LEAGUE_DATABASE_JSON)
             self.__setBaseConn__(baseCollection)
 
         def __getBaseConn__(self):
@@ -42,11 +42,11 @@ class LeagueDatabase:
 class ActiveDatabase(LeagueDatabase):
     def __init__(self):
         try:
-            LeagueDatabase.__init__(self, BASE_COLLECTION_NAME)
-            self.__conn = self.getInstance().__getBaseConn__().document(ACTIVE_DB_NAME)
-        except:
+            LeagueDatabase.__init__(self, sc.BASE_COLLECTION_NAME)
+            self.__conn = self.getInstance().__getBaseConn__().document(sc.ACTIVE_DB_NAME)
+        except Exception as e:
             self.__conn = None
-            raise('Error Connecting to Firebase')
+            raise e
  
     def getConn(self):
         return self.__conn
@@ -55,11 +55,22 @@ class ActiveDatabase(LeagueDatabase):
 class ArchiveDatabase(LeagueDatabase):
     def __init__(self):
         try:
-            LeagueDatabase.__init__(self, BASE_COLLECTION_NAME)
-            self.__conn = self.getInstance().__getBaseConn__().document(ARCHIVE_DB_NAME)
-        except:
+            LeagueDatabase.__init__(self, sc.BASE_COLLECTION_NAME)
+            self.__conn = self.getInstance().__getBaseConn__().document(sc.ARCHIVE_DB_NAME)
+        except Exception as e:
             self.__conn = None
-            raise('Error connecting to Firebase')
+            raise e
     def getConn(self):
         return self.__conn
 
+
+def main():
+    try:
+        test1 = ActiveDatabase()
+        test2 = ArchiveDatabase()
+        print("Success")
+    except Exception as e:
+        print(e)
+
+if __name__ == "__main__":
+    main()
