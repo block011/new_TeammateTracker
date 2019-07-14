@@ -1,4 +1,4 @@
-from ../resources/config import *
+from config import *
 
 class Match:
     def __init__(self,id,creationTime):
