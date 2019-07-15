@@ -1,6 +1,4 @@
-
-from config import *
-
+from config import ALL_REGIONS
 
 class User:#TODO Every time region is changed, update api path
 
@@ -54,7 +52,7 @@ class User:#TODO Every time region is changed, update api path
 
 def main():
     print("Test for user class")
-    userTest = User("NA","Afternoonview")
+    userTest = User("NA","Afternoonview","328fjrf429d32-423f-ewt23truh")
     print('summoner id : {} --- region : {}'.format(userTest.getSummonerId(), userTest.getRegion()))
 
 if __name__ == "__main__":
