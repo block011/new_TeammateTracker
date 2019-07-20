@@ -51,6 +51,9 @@ class ActiveDatabase(LeagueDatabase):
     def getConn(self):
         return self.__conn
 
+    def getClient(self):
+        return self.getInstance().db
+
 #Uses LeagueDatabase to access the active db
 class ArchiveDatabase(LeagueDatabase):
     def __init__(self):
@@ -63,6 +66,8 @@ class ArchiveDatabase(LeagueDatabase):
     def getConn(self):
         return self.__conn
 
+    def getClient(self):
+        return self.getInstance().db
 
 def main():
     try:
