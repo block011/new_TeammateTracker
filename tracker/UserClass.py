@@ -31,6 +31,8 @@ class User:#TODO Every time region is changed, update api path
         #Defaults region to None if region is invalid
         if region in ALL_REGIONS:
             self._region = ALL_REGIONS[region] 
+        elif region in ALL_REGIONS.values():
+            self._region = region
         else:
             _region = None
             raise Exception('Invalid region entered: {}'.format(region))
