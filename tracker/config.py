@@ -22,5 +22,6 @@ MATCH_FINDER_SCHEDULE_TIME = 10 # Minutes matchfinder waits before checking agai
 MAX_MATCH_FETCH = 50
 
 #Args ---- Region, Accountid, apikey, max_games 
-RIOT_FETCH_MATCH_URL = 'https://{}.api.riotgames.com/lol/match/v4/matchlists/by-account/{}?api_key={}&endIndex={}'
-
+RIOT_FETCH_MATCHES_URL = 'https://{}.api.riotgames.com/lol/match/v4/matchlists/by-account/{}?api_key={}&endIndex={}'
+#Args ---- Region, matchId, apikey
+RIOT_FETCH_MATCH_DETAILS_URL = 'https://{}.api.riotgames.com/lol/match/v4/matches/{}?api_key={}'
