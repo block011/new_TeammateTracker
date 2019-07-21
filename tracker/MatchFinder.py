@@ -8,7 +8,13 @@ import time
 
 
 def fetchActiveUsers():
-    ''' fetches all active users'''
+    ''' fetches all active users
+        Args: None
+
+        Return:
+            userList = dictionary of active users
+            success = boolean on whether it grabbed users
+    '''
     #accessing active database
     dbConnection = ActiveDatabase().getConn()
     userConnection= dbConnection.collection(u'users')
@@ -23,6 +29,12 @@ def fetchActiveUsers():
     return userList,success
 
 def RateLimitFromHeader(limitCount):
+    ''' Detects if script gets close to rate limit for api, then slows it down
+        Args:
+            limitCount = response.header["X-App-Rate-Limit-Count"]
+        Return:
+            None
+    '''
     list = limitCount.split(',')
     current,limit = list[1].split(':',1)
     ratio = float(current)/float(limit)
@@ -107,13 +119,24 @@ def insertSingleMatch(match,account_id):
         return 'Error'
 
 def insertParticipant(participant,matchId,userAccountId):
-    insertDict = dict()
-    insertDict['match_id'] = matchId
-    insertDict['summoner_id'] = participant
-    insertDict['personal_summoner_id'] = userAccountId
-    dbConnection = ActiveDatabase()
-    inMatchConnection = dbConnection.getConn().collection(IN_MATCH)
-    inMatchConnection.add(insertDict)
+    ''' Inserts a document into the IN_MATCH database
+        Args:
+            participant = the participant's accountId
+            matchId = current matchId
+            userAccountId = the active user's personal accountId
+
+    '''
+    try:
+        insertDict = dict()
+        insertDict['match_id'] = matchId
+        insertDict['summoner_id'] = participant
+        insertDict['personal_summoner_id'] = userAccountId
+        dbConnection = ActiveDatabase()
+        inMatchConnection = dbConnection.getConn().collection(IN_MATCH)
+        inMatchConnection.add(insertDict)
+    except Exception as e:
+        print (e)
+
 
 #TODO implement logger
 def main():
