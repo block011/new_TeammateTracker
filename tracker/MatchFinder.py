@@ -79,22 +79,29 @@ def fetchMatchEntries(user):
         accountId: "6UoWroRfGgxqnI0Oj-KahipCC2TcQWiKkAar-BWyYGoxAw"
         summonerId: "afternoonview'
     Returns:
-        TODO:
-            check for rate limit on Riot's api   
+
     '''
+    logger.info("Fetching match entries for user: {}".format(user["summonerId"]))
+
     try:
         url = RIOT_FETCH_MATCHES_URL.format(user["region"], user["accountId"], RIOT_API_KEY, MAX_MATCH_FETCH)
+        logger.info("GET method: {}".format(url))
         response = requests.get(url)
-        if "X-App-Rate-Limit-Count" in response.headers:
-            print(response.headers["X-App-Rate-Limit-Count"])
-            RateLimitFromHeader(response.headers["X-App-Rate-Limit-Count"])
-        matchList = response.json()['matches']
-        success = True
+        if response.status_code == 200:
+
+            if "X-App-Rate-Limit-Count" in response.headers:
+                RateLimitFromHeader(response.headers["X-App-Rate-Limit-Count"])
+            matchList = response.json()['matches']
+            success = True
+        else:
+            raise Exception("Invalid response code: {}".format(response.status_code))
     except Exception as e:
-        print(e)
+        logger.warning("Exception was thrown!!! --- {}".format(e))
         matchList = None
         success = False
     
+    logger.info("Returning -- Success: {}".format(success))
+    logger.info("          -- matchList: {}".format(matchList))
     return matchList, success
 
 def fetchUsersInMatch(region,matchId):
