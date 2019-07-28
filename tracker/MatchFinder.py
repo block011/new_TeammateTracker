@@ -175,60 +175,54 @@ def insertParticipant(participant,matchId,userAccountId):
         dbConnection = ActiveDatabase()
         inMatchConnection = dbConnection.getConn().collection(IN_MATCH)
         inMatchConnection.add(insertDict)
+
+        logger.info("Successfully added participant")
     except Exception as e:
-        print (e)
+        logger.info("An error has occured: {}".format(e))
 
 
-#TODO implement logger
 def main():
-    
-    print("Running MatchFinder")
+    logger.info("... Initializing MatchFinder ...")
 
     userList, userListSuccess = fetchActiveUsers()
     if userListSuccess:
+        logger.info("Found users...")
         for user in userList:
-            print("Users successfully queried")
             #Changing connection into dictionary
             user = user.to_dict()
+
+            logger.info("Initializing run for user: {}".format(user))
+
             #Creating User Class out of data received
             user = User(user['region'],user['summoner_id'],user['account_id'])
+
+            logger.info("Converted user into User class: {}".format(user.toDict()))
+
             matchList, matchListSuccess = fetchMatchEntries(user.toDict())
             if matchListSuccess:
-                print("Matches successfully queried")
+                logger.info("Found matches...")
                 for match in matchList:
                     match = Match(match['gameId'],match['timestamp'],user.getRegion())
-                    
+
+                    logger.info("Initializing run for match: {}".format(match.toDict()))
+
                     insertMatchMessage = insertSingleMatch(match.toDict(),user.getAccountId())
                     if insertMatchMessage is 'Success':
                         usersInMatch = fetchUsersInMatch(match.getRegion(),match.getMatchId())
                         for participant in usersInMatch:
+                            logger.info("Initializing participant: {}".format(participant['player']['accountId']))
+
                             insertParticipant(participant['player']['accountId'],match.getMatchId(),user.getAccountId())
-                        print("need to query for match details")
                     elif insertMatchMessage is 'Exists':
-                        print("Skipping user")
+                        logger.info("Match found that currently exists. Skipping user...")
                         break
                     elif insertMatchMessage is 'Error':
-                        print("Error should skip singular match")
+                        logger.info("Error has occured when inserting match. Skipping singular match...")
             else:
-                print("Failed to retrieve any active runs")
+                logger.info("Failed to retrieve any active runs")
     else:
-        print("Failed to retrieve any active users")
-
-    #steps 
-    #Get active users
-    #for each active user
-        #grab last 40 matches from riot api
-        #for each match
-            #if match does not exists in our database
-                #add the match
-                #for each summoner in match
-                    #add summoner
-                    #add summoner_in_match
-            #else 
-                #break
-
-
-
+        logger.info("Failed to retrieve any active users")
 
 if __name__ == "__main__":
+    initLogger()
     main()
