@@ -112,13 +112,17 @@ def fetchUsersInMatch(region,matchId):
     Returns: Dictionary of match details
 
     '''
+
+    logger.info("Fetching summones from match: {}-{}".format(region,matchId))
     url = RIOT_FETCH_MATCH_DETAILS_URL.format(region,matchId,RIOT_API_KEY)
-    print(url)
+    logger.info("GET Method: ".format(url))
+
     response = requests.get(url)
     if "X-App-Rate-Limit-Count" in response.headers:
-        print(response.headers["X-App-Rate-Limit-Count"])
         RateLimitFromHeader(response.headers["X-App-Rate-Limit-Count"])
     users = response.json()['participantIdentities']
+
+    logger.info("Returns -- users: {}".format(users))
     return users
 
 
