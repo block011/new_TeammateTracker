@@ -132,22 +132,30 @@ def insertSingleMatch(match,account_id):
 
     Returns: a response message 
     '''
-    print("attempting to insert match")
+    logger.info("Inserting single match into db")
     try:
         dbConnection = ActiveDatabase()
         matchConnection = dbConnection.getConn().collection(MATCHES)
         inMatchConnection = dbConnection.getConn().collection(IN_MATCH)
+        logger.info("Checking if match exists")
         doesExist = inMatchConnection.where(u'match_id',u'==',match['matchId']).where(u'personal_summoner_id',u'==',account_id).stream()
         for doc in doesExist:
-            print (doc)
-            print('Match already exists')
+            logger.info("Match already exists")
+            logger.info(doc)
+
+            logger.info("Returns -- Exists")
             return 'Exists'
         else:
             matchConnection.document(match['matchId']).set(match)
-            print("inserting match")
+            logger.info("Match not found!!!")
+            logger.info("Attempting to insert match")
+
+            logger.inf("Returns -- Success")
             return 'Success'
     except Exception as e:
-        print("An error has occured: {}".format(e))
+        logger.info("An error has occured: {}".format(e))
+
+        logger.info("Returns -- Error")
         return 'Error'
 
 def insertParticipant(participant,matchId,userAccountId):
