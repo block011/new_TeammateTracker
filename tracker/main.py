@@ -3,10 +3,8 @@ import time
 import os
 from subprocess import Popen
 
+from SensitiveConfig import CURRENT_FILE_PATH 
 from config import MATCH_FINDER_FILE_NAME,  MATCH_FINDER_SCHEDULE_TIME
-
-#Used to grab file path of main.py
-CURRENT_FILE_PATH = os.path.dirname(os.path.realpath(__file__))
 
 def runMatchFinder():       
     Popen('python {}/{}'.format(CURRENT_FILE_PATH,MATCH_FINDER_FILE_NAME))
