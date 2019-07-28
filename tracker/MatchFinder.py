@@ -13,7 +13,7 @@ def initLogger():
     logger.setLevel(logging.INFO)
 
     #Creating file handler
-    handler = logging.FileHandler('{}/log/MatchFinder_{}.log'.format(CURRENT_FILE_PATH,time.strftime('%m%d_%H%M%S')))
+    handler = logging.FileHandler('{}/MatchFinder_{}.log'.format(LOG_DIRECTORY,time.strftime('%m%d_%H%M%S')))
     handler.setLevel(logging.INFO)
 
     #Creating logging format
@@ -113,16 +113,16 @@ def fetchUsersInMatch(region,matchId):
 
     '''
 
-    logger.info("Fetching summones from match: {}-{}".format(region,matchId))
+    logger.info("Fetching summoners from match: {}-{}".format(region,matchId))
     url = RIOT_FETCH_MATCH_DETAILS_URL.format(region,matchId,RIOT_API_KEY)
-    logger.info("GET Method: ".format(url))
+    logger.info("GET Method: {}".format(url))
 
     response = requests.get(url)
     if "X-App-Rate-Limit-Count" in response.headers:
         RateLimitFromHeader(response.headers["X-App-Rate-Limit-Count"])
     users = response.json()['participantIdentities']
 
-    logger.info("Returns -- users: {}".format(users))
+    logger.info("Returns -- users: {}".format(str(users)))
     return users
 
 
@@ -141,7 +141,7 @@ def insertSingleMatch(match,account_id):
         doesExist = inMatchConnection.where(u'match_id',u'==',match['matchId']).where(u'personal_summoner_id',u'==',account_id).stream()
         for doc in doesExist:
             logger.info("Match already exists")
-            logger.info(doc)
+            logger.info(doc.to_dict())
 
             logger.info("Returns -- Exists")
             return 'Exists'
@@ -150,10 +150,10 @@ def insertSingleMatch(match,account_id):
             logger.info("Match not found!!!")
             logger.info("Attempting to insert match")
 
-            logger.inf("Returns -- Success")
+            logger.info("Returns -- Success")
             return 'Success'
     except Exception as e:
-        logger.info("An error has occured: {}".format(e))
+        logger.warning("An error has occured: {}".format(e))
 
         logger.info("Returns -- Error")
         return 'Error'
@@ -178,7 +178,7 @@ def insertParticipant(participant,matchId,userAccountId):
 
         logger.info("Successfully added participant")
     except Exception as e:
-        logger.info("An error has occured: {}".format(e))
+        logger.warning("An error has occured: {}".format(e))
 
 
 def main():
