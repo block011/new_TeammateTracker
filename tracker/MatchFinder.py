@@ -166,6 +166,7 @@ def insertParticipant(participant,matchId,userAccountId):
             userAccountId = the active user's personal accountId
 
     '''
+    logger.info("Inserting participant: participant: {} matchId: {} userAccountId {}".format(participant,matchId,userAccountId))
     try:
         insertDict = dict()
         insertDict['match_id'] = matchId
