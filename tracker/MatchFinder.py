@@ -31,17 +31,23 @@ def fetchActiveUsers():
             userList = dictionary of active users
             success = boolean on whether it grabbed users
     '''
+
+    logger.info("Fetching active users")
+
     #accessing active database
     dbConnection = ActiveDatabase().getConn()
-    userConnection= dbConnection.collection(u'users')
+    userConnection= dbConnection.collection(USERS)
     try:
         userList = userConnection.stream()
+        logger.info("Query was successful.")
         success = True
     except Exception as e:
-        print(e)
+        logger.warning("Exception was thrown!!! --- {}".format(e))
         userList = None
         success = False
     
+    logger.info("Returning -- Success: {}".format(success))
+    logger.info("          -- UserList: {}".format(success))
     return userList,success
 
 def RateLimitFromHeader(limitCount):
