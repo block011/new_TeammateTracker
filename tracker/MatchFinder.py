@@ -5,7 +5,23 @@ from SensitiveConfig import *
 from config import *
 import requests
 import time
+import logging
 
+logger = logging.getLogger(__name__)
+
+def initLogger():
+    logger.setLevel(logging.INFO)
+
+    #Creating file handler
+    handler = logging.FileHandler('{}/log/MatchFinder_{}.log'.format(CURRENT_FILE_PATH,time.strftime('%m%d_%H%M%S')))
+    handler.setLevel(logging.INFO)
+
+    #Creating logging format
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+
+    #add handlers to the logger
+    logger.addHandler(handler)
 
 def fetchActiveUsers():
     ''' fetches all active users
