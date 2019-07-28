@@ -60,18 +60,17 @@ def RateLimitFromHeader(limitCount):
     list = limitCount.split(',')
     current,limit = list[1].split(':',1)
     ratio = float(current)/float(limit)
-    if ratio == .99:
-        sleepTime = limit
-    elif ratio == .75:
-        sleepTime = 5
-    else:
-        sleepTime = 0
+    sleepTime = 0
 
+    logger.info("Checking rate limit. current: {} limit: {} ratio: {}".format(current,limit,ratio))
+
+    #Will need to be changed with producer key. Built for 120 rate limit every 2 minutes
+    if ratio == .75:
+        sleepTime = 2
+
+    #Keeping this open for change, more distict sleep times may be added
     if sleepTime:
         time.sleep(sleepTime)
-
-
-
 
 def fetchMatchEntries(user):
     ''' fetches n number of matches from RiotGames api
