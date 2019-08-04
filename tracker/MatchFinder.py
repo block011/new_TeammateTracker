@@ -47,7 +47,7 @@ def fetchActiveUsers():
         success = False
     
     logger.info("Returning -- Success: {}".format(success))
-    logger.info("          -- UserList: {}".format(success))
+    logger.info("          -- UserList: {}".format(userList))
     return userList,success
 
 def RateLimitFromHeader(limitCount):
